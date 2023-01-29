@@ -1,0 +1,94 @@
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial;
+      }
+      h1 {
+        color: #3f51b5;
+      }
+      table {
+        border-collapse: collapse;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid black;
+      }
+      th,
+      td {
+        padding: 8px;
+      }
+      th {
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>REST API Documentation</h1>
+    <table>
+      <tr>
+        <th>Endpoint URI</th>
+        <th>Method</th>
+        <th>MIME Type of Response</th>
+        <th>Expected Request Body</th>
+        <th>Successful Response</th>
+        <th>Error Response</th>
+      </tr>
+      <tr>
+        <td>/</td>
+        <td>POST</td>
+        <td>application/json</td>
+        <td>
+          <p>"author": string,</p>
+          <p>"alt": string,</p>
+          <p>"tags": string,</p>
+          <p>"image": string,</p>
+          <p>"description": string</p>
+        </td>
+        <td>201 Created</td>
+        <td>
+          400 Bad Request (Missing property: [property name])<br />500 Internal
+          Server Error (Error message)
+        </td>
+      </tr>
+      <tr>
+        <td>/</td>
+        <td>GET</td>
+        <td>application/json</td>
+        <td>N/A</td>
+        <td>200 OK (Data as JSON object)</td>
+        <td>500 Internal Server Error (Error message)</td>
+      </tr>
+      <tr>
+        <td>/</td>
+        <td>PATCH</td>
+        <td>application/json</td>
+        <td>
+          <p>"id": string,</p>
+          <p>"author": string?,</p>
+          <p>"alt": string?,</p>
+          <p>"tags": string?,</p>
+          <p>"image": string?,</p>
+          <p>"description": string?</p>
+        </td>
+        <td>200 OK (Updated data as JSON object)</td>
+        <td>
+          400 Bad Request (Missing property: id)<br />500 Internal Server Error
+          (Error message)
+        </td>
+      </tr>
+      <tr>
+        <td>/</td>
+        <td>DELETE</td>
+        <td>application/json</td>
+        <td>"id": string</td>
+        <td>200 OK</td>
+        <td>
+          400 Bad Request (Missing property: id)<br />500 Internal Server Error
+          (Error message)
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

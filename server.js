@@ -108,6 +108,28 @@ app.patch("/", function (req, res) {
   });
 });
 
+// This route responds to DELETE http://localhost:3000/ by
+// deleting an entry from the database with the provided id
+app.delete("/", function (req, res) {
+  const body = req.body;
+  const id = body.id;
+
+  // check if id is provided
+  if (!id) {
+    res.status(400); // error 400 indicating client error
+    return res.json({ error: "Error! id must not be empty" });
+  }
+
+  db.run(`DELETE FROM gallery WHERE id = ${id}`, function (err) {
+    if (err) {
+      res.status(500);
+      return res.json({ error: "Error: " + err });
+    }
+
+    return res.sendStatus(200);
+  });
+});
+
 // ###############################################################################
 // This should start the server, after the routes have been defined, at port 3000:
 app.listen(3000);
@@ -116,6 +138,7 @@ console.log("Open http://localhost:3000/ in your browser to see if it works");
 
 // ###############################################################################
 // Some helper functions called above
+//
 function my_database(filename) {
   // Conncect to db by opening filename, create filename if it does not exist:
   var db = new sqlite.Database(filename, (err) => {
