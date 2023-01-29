@@ -4,6 +4,7 @@
 
 const sqlite = require("sqlite3").verbose();
 let db = my_database("./gallery.db");
+create_data();
 
 // ###############################################################################
 // The database should be OK by now. Let's setup the Web server so we can start
@@ -12,10 +13,13 @@ let db = my_database("./gallery.db");
 // First, create an express application `app`:
 
 var express = require("express");
+var cors = require("cors");
 var app = express();
 
 // Middleware to parse JSON data in the body of our HTTP requests:
 app.use(express.json());
+// Middleware to enable all CORS requests
+app.use(cors());
 
 // ###############################################################################
 // Routes
@@ -26,6 +30,7 @@ app.use(express.json());
 app.post("/", function (req, res) {
   const body = req.body;
 
+  // list of all parms user should provide
   const params = ["author", "alt", "tags", "image", "description"];
   const arr = [];
   const errors = [];
@@ -80,11 +85,13 @@ app.patch("/", function (req, res) {
   const body = req.body;
   const id = body.id;
 
+  // check if id is provided
   if (!id) {
     res.status(400); // error 400 indicating client error
     return res.json({ error: "Error! id must not be empty" });
   }
 
+  // list of all params modifiable by the user
   const params = ["author", "alt", "tags", "image", "description"];
   let sql = `UPDATE gallery SET`;
   for (const param of params) {
@@ -130,6 +137,36 @@ app.delete("/", function (req, res) {
   });
 });
 
+// This route responds to GET http://localhost:3000/reset by
+// deleting all entries from database and creating new, fresh ones
+app.get("/reset", async function (_, res) {
+  try {
+    // using a promise in order to wait for the data creation query to complete
+    await new Promise((resolve) => {
+      db.run("DROP TABLE gallery", function () {
+        create_data(function () {
+          resolve();
+        });
+      });
+    });
+
+    // exactly as in GET /
+    db.all(`SELECT * FROM gallery`, function (err, rows) {
+      if (err) {
+        res.status(500);
+        return res.json({ error: "Error! " + err });
+      }
+
+      res.status(200);
+      // # Return db response as JSON
+      return res.json(rows);
+    });
+  } catch (err) {
+    res.status(500);
+    return res.json({ error: "Error! " + err });
+  }
+});
+
 // ###############################################################################
 // This should start the server, after the routes have been defined, at port 3000:
 app.listen(3000);
@@ -139,17 +176,10 @@ console.log("Open http://localhost:3000/ in your browser to see if it works");
 // ###############################################################################
 // Some helper functions called above
 //
-function my_database(filename) {
-  // Conncect to db by opening filename, create filename if it does not exist:
-  var db = new sqlite.Database(filename, (err) => {
-    if (err) {
-      console.error(err.message);
-    }
-    console.log("Connected to the gallery database.");
-  });
+function create_data(callback = function () {}) {
   // Create our gallery table if it does not exist already:
-  db.serialize(() => {
-    db.run(`
+  db.run(
+    `
         	CREATE TABLE IF NOT EXISTS gallery
         	 (
                     id INTEGER PRIMARY KEY,
@@ -159,38 +189,52 @@ function my_database(filename) {
                     image char(2048) NOT NULL,
                     description CHAR(1024) NOT NULL
 		 )
-		`);
-    db.all(`select count(*) as count from gallery`, function (_, result) {
-      if (result[0].count == 0) {
-        db.run(
-          `INSERT INTO gallery (author, alt, tags, image, description) VALUES (?, ?, ?, ?, ?)`,
-          [
-            "Tim Berners-Lee",
-            "Image of Berners-Lee",
-            "html,http,url,cern,mit",
-            "https://upload.wikimedia.org/wikipedia/commons/9/9d/Sir_Tim_Berners-Lee.jpg",
-            "The internet and the Web aren't the same thing.",
-          ]
-        );
-        db.run(
-          `INSERT INTO gallery (author, alt, tags, image, description) VALUES (?, ?, ?, ?, ?)`,
-          [
-            "Grace Hopper",
-            "Image of Grace Hopper at the UNIVAC I console",
-            "programming,linking,navy",
-            "https://upload.wikimedia.org/wikipedia/commons/3/37/Grace_Hopper_and_UNIVAC.jpg",
-            "Grace was very curious as a child; this was a lifelong trait. At the age of seven, she decided to determine how an alarm clock worked and dismantled seven alarm clocks before her mother realized what she was doing (she was then limited to one clock).",
-          ]
-        );
-        console.log("Inserted dummy photo entry into empty database");
-      } else {
-        console.log(
-          "Database already contains",
-          result[0].count,
-          " item(s) at startup."
-        );
-      }
-    });
+		`,
+    function () {
+      db.all(`select count(*) as count from gallery`, function (_, result) {
+        if (result[0].count == 0) {
+          db.run(
+            `INSERT INTO gallery (author, alt, tags, image, description) VALUES (?, ?, ?, ?, ?)`,
+            [
+              "Tim Berners-Lee",
+              "Image of Berners-Lee",
+              "html,http,url,cern,mit",
+              "https://upload.wikimedia.org/wikipedia/commons/9/9d/Sir_Tim_Berners-Lee.jpg",
+              "The internet and the Web aren't the same thing.",
+            ],
+            function () {
+              db.run(
+                `INSERT INTO gallery (author, alt, tags, image, description) VALUES (?, ?, ?, ?, ?)`,
+                [
+                  "Grace Hopper",
+                  "Image of Grace Hopper at the UNIVAC I console",
+                  "programming,linking,navy",
+                  "https://upload.wikimedia.org/wikipedia/commons/3/37/Grace_Hopper_and_UNIVAC.jpg",
+                  "Grace was very curious as a child; this was a lifelong trait. At the age of seven, she decided to determine how an alarm clock worked and dismantled seven alarm clocks before her mother realized what she was doing (she was then limited to one clock).",
+                ]
+              );
+              console.log("Inserted dummy photo entry into empty database");
+              callback();
+            }
+          );
+        } else {
+          console.log(
+            "Database already contains",
+            result[0].count,
+            " item(s) at startup."
+          );
+        }
+      });
+    }
+  );
+}
+function my_database(filename) {
+  // Conncect to db by opening filename, create filename if it does not exist:
+  var db = new sqlite.Database(filename, (err) => {
+    if (err) {
+      console.error(err.message);
+    }
+    console.log("Connected to the gallery database.");
   });
   return db;
 }

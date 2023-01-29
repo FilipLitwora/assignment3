@@ -1,0 +1,165 @@
+@media screen and (min-width: 350px) {
+    body {
+      background-color: rgb(0, 0, 0);
+    }
+  }
+  
+  @media screen and (min-width: 800px) {
+    caption {
+      text-transform: none;
+      font-size: 30px;
+      font-weight: 100;
+      font-style: normal;
+      font-variant: normal;
+      font: normal 30px Georgia;
+      color: rgba(213, 156, 103, 0.848);
+      background-color: #906955b1;
+    }
+  
+    .Authors {
+      orphans: 4;
+      color: black;
+      page-break-after: auto;
+      margin-bottom: 50px;
+      margin-left: 20px;
+      margin-right: 20px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      background-color: #906955b1;
+      text-align: center;
+      font: normal 30px Georgia;
+      text-decoration: underline;
+      list-style: none;
+      margin-top: 10px;
+    }
+    a:link,
+    a:visited {
+      color: black;
+    }
+    a:hover,
+    a:active {
+      color: rgb(231, 167, 63);
+    }
+    img {
+      float: none;
+      vertical-align: middle;
+      border-left: 10px solid white;
+      border-right: 10px solid white;
+      border-top: 10px solid white;
+      border-bottom: 40px solid white;
+    }
+    table {
+      margin: 100px;
+      margin-bottom: 10px;
+      caption-side: top;
+      text-indent: 0%;
+      background-color: rgba(250, 235, 215, 0.531);
+      border: 8px;
+      border-style: dotted;
+      border-color: #d0b8ac;
+      border-width: 5px;
+      border-spacing: 5px;
+    }
+    th,
+    td {
+      page-break-before: auto;
+      background-color: #906955b7;
+      border: 1px dotted white;
+      border-collapse: collapse;
+  
+      font: normal 30px Georgia;
+      font-size: 18px;
+      text-align: center;
+      widows: 3;
+    }
+  
+    label {
+      font-weight: 800;
+      font-style: oblique;
+    }
+  
+    ul {
+      color: black;
+    }
+  
+    ol {
+      color: black;
+      text-indent: 3px;
+    }
+  
+    body {
+      background-image: url(https://fsa.zobj.net/crop.php?r=FKekdNRt8RQpNjmS54EQZvBGxeI7e3ImIrDD7ROZhItorrH4INC0N0thZInDODxtEvujGhBR5fjpAqivmmvSM8kVPbS9ceovKGl-jgsu5HtmDP8tmletARHYC6rehO-eloeJmytXBaypkoPbiLjnlseOM6ZEXKimnRoNcGH8F-ZCW5ePdqU-N44Ad-ecpHune-hM-5B0cuCpWh9p);
+    }
+  
+    caption {
+      text-transform: none;
+      font-size: 30px;
+      font-weight: 100;
+      font-style: normal;
+      font-variant: normal;
+      font-family: Georgia;
+      color: rgba(32, 16, 0, 0.848);
+      background-color: #906955b1;
+    }
+  
+    table #edit {
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+  }
+  
+  .center {
+    width: 95px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .active-filter {
+    color: rgba(228, 143, 7, 0.749);
+  }
+  
+  .Authors a {
+    cursor: pointer;
+  }
+  
+  .hidden,
+  .hidden-search {
+    display: none;
+  }
+  
+  #searchInput {
+    display: block;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 32px;
+    margin-bottom: 10px;
+  }
+  
+  nav p {
+    text-align: center;
+    color: white;
+    font-size: 20px;
+  }
+  
+  #modal-1 {
+    opacity: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  #modal-1 #close {
+    display: block;
+    width: 80px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .is-open {
+    opacity: 1 !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 100vw;
+  }
